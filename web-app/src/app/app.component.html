@@ -1,0 +1,56 @@
+<div class="imgcontainer" style="text-align: center;">
+  <form [formGroup]="searchAllFormGroup" class="row">
+
+    <mat-form-field class="col-12">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" (blur)="blur()">
+    </mat-form-field>
+
+
+    <mat-form-field class="col-12">
+      <mat-label>Album title</mat-label>
+      <input matInput formControlName="albumTitle" (blur)="blur()">
+    </mat-form-field>
+
+
+    <mat-form-field class="col-12">
+      <mat-label>User Email</mat-label>
+      <input matInput formControlName="userEmail" (blur)="blur()">
+
+    </mat-form-field>
+
+
+
+    <mat-form-field class="col-12">
+      <mat-label>Photos per page</mat-label>
+      <input matInput formControlName="perPage" type="number" min="1" (blur)="blur()">
+    </mat-form-field>
+  </form>
+
+  <div *ngIf="searchAllFormGroup.invalid" class="alert">
+
+
+    <div *ngIf="searchAllFormGroup.invalid">
+      invalid email
+    </div>
+
+  </div>
+
+
+</div>
+
+<div style="text-align: center;">
+  <button mat-raised-button (click)="previous()">{{prevText}}</button>
+  <button mat-raised-button (click)="next()">{{nextText}}</button>
+</div>
+
+
+<div class="imgcontainer">
+  <div style="text-align: center;">
+
+    <div class="gallery" *ngFor="let image of _albums; let i=index">
+      <img src="{{image.thumb}}" (click)="open(i)" />
+    </div>
+
+  </div>
+</div>
