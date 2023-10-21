@@ -17,8 +17,11 @@ export class AppComponent {
   title = 'dev test';
   prevText = '<< Previous'
   nextText = 'Next >>'
-
+  imgURL!: string;
   searchAllFormGroup!: FormGroup;
+  showIaImage = false;
+  hidden = false;
+  selectedImg!: any;
 
   _albums: any = [];
 
@@ -55,13 +58,33 @@ export class AppComponent {
   }
 
   open(index: number): void {
+    this.showIaImage = true;
+    this.hidden = true;
+    this.imgURL = "";
     // open lightbox
-    this._lightbox.open(this._albums, index, { fitImageInViewPort: true, showZoom: true });
+    //this._lightbox.open(this._albums, index, { fitImageInViewPort: true, showZoom: true });
+    console.log(this._albums[index].img);
+    this.selectedImg = this._albums[index].img;
+
+    this.jsonService.createImage(this._albums[index].img.album.title).toPromise().then(res => {
+      console.log(res)
+
+      //this.imgURL =  res.
+      this.imgURL = res.data[0].url;
+      this.hidden = false;
+
+    });
   }
 
   close(): void {
     // close lightbox programmatically
     this._lightbox.close();
+    this.imgURL = "";
+  }
+
+  goBack() {
+
+    this.showIaImage = false;
   }
 
 
@@ -125,20 +148,21 @@ export class AppComponent {
               duration: 3000
             });
           }
-
+          console.log(result);
           result?.forEach(img => {
 
 
             const src = img.thumbnailUrl;
             const caption = "Tittle: " + img.title
               + '</p> Album: ' + img.album.title
-              + '</p> User name: ' + img.album.user[0].name;
-            +'</p> Email: ' + img.album.user[0].email;
+              + '</p> User name: ' + img.album.user.name;
+            +'</p> Email: ' + img.album.user.email;
             const thumb = img.thumbnailUrl;
             const album = {
               src: src,
               caption: caption,
-              thumb: thumb
+              thumb: thumb,
+              img: img
             };
 
             this._albums.push(album);

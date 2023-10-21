@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Param } from '../class/Param';
 import { UrlUtils } from '../util/UrlUtils';
 import { Observable } from 'rxjs/internal/Observable';
+import { reqBody } from '../interface/reqBody';
+import { environment } from 'src/environment/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +35,14 @@ export class JsonService {
 
   getPhotos(params:Param[]): Observable<any[]> {
   
-    return this.getData<any[]>(`http://localhost:8080/api/externalapi/photos`, params);
+    return this.getData<any[]>(`${environment.BACKEND_URL}api/externalapi/photos`, params);
+  }
+
+  createImage(pText: string): Observable<any> {
+    let val : reqBody = {prompt: pText, n: 1, size: '1024x1024'}
+    const headers = { 'Authorization': `Bearer ${environment.OPENAI_API_KEY}` };
+    return this.html.post<any>(`${environment.OPEN_AI}v1/images/generations`,
+    val, { headers });
   }
 
 }
