@@ -20,8 +20,10 @@ export class AppComponent {
   imgURL!: string;
   searchAllFormGroup!: FormGroup;
   showIaImage = false;
-  hidden = false;
+  showGeneratingImage = false;
+  showLoadingAlbums = false;
   selectedImg!: any;
+  showErrorMessage = false;
 
   _albums: any = [];
 
@@ -58,21 +60,25 @@ export class AppComponent {
   }
 
   open(index: number): void {
+    this.showErrorMessage = false;
     this.showIaImage = true;
-    this.hidden = true;
+    this.showGeneratingImage = true;
     this.imgURL = "";
     // open lightbox
     //this._lightbox.open(this._albums, index, { fitImageInViewPort: true, showZoom: true });
-    console.log(this._albums[index].img);
+    //console.log(this._albums[index].img);
     this.selectedImg = this._albums[index].img;
 
     this.jsonService.createImage(this._albums[index].img.album.title).toPromise().then(res => {
-      console.log(res)
+      //console.log(res)
 
       //this.imgURL =  res.
       this.imgURL = res.data[0].url;
-      this.hidden = false;
+      this.showGeneratingImage = false;
 
+    }).catch(err => {
+      this.showErrorMessage = true;
+      console.error(err)
     });
   }
 
@@ -139,7 +145,7 @@ export class AppComponent {
       }
 
 
-
+      this.showLoadingAlbums = true;
       this.jsonService.getPhotos(params).toPromise().then(
         result => {
 
@@ -148,7 +154,7 @@ export class AppComponent {
               duration: 3000
             });
           }
-          console.log(result);
+          //console.log(result);
           result?.forEach(img => {
 
 
@@ -167,9 +173,13 @@ export class AppComponent {
 
             this._albums.push(album);
           });
+          this.showLoadingAlbums = false;
         }
 
-      );
+      ).catch(err => {
+        this.showErrorMessage = true;
+        console.log(err);
+      });
     }
   }
 }

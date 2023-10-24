@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  OPENAI_API_KEY: '',
-  BACKEND_URL: 'http://localhost:8080/',
+  OPENAI_API_KEY: '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',
+  BACKEND_URL: 'https://jsonbackend.onrender.com/',
   OPEN_AI: 'https://api.openai.com/'
 };
 
